@@ -1,0 +1,20 @@
+{
+    "name": "valeriy/prometheus-test-case",
+    "type": "project",
+    "authors": [
+        {
+            "name": "vlae",
+            "email": "valeriy.tomov@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7",
+        "needim/noty": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Date\\": "Core/Date"
+        }
+    }
+}
