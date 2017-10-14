@@ -9,6 +9,8 @@
 namespace Date;
 
 class Calendar {
+
+    public $yearDays = 364;
     // defines how much days in each month
     public $days = [
         1 => 31, // Jun
@@ -33,6 +35,8 @@ class Calendar {
     public function __construct(int $years) {
         if ($years % 4 === 0) {
             $this->days[2] = 29;
+
+            $this->yearDays = 365;
         }
 
         return $this->days;

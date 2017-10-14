@@ -8,7 +8,7 @@
 
 namespace Date;
 
-class Recognizer implements Recognizable {
+class Recognizer {
     protected $maxMonths = 12;
 
     public $years;

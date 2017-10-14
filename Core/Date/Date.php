@@ -8,15 +8,13 @@
 
 namespace Date;
 
-use Date\Count;
-
 class Date
 {
     protected $years;
     protected $months;
     protected $days;
     protected $totalDays;
-    protected $invent;
+    protected $invent = false;
 
 
     public function __construct(string $sDate, string $eDate) {
@@ -24,13 +22,13 @@ class Date
         $endDate = new Recognizer($eDate);
 
        if ($sDate > $eDate) {
-           Count::setInvent();
+           $this->invent = Count::setInvent();
        }
 
-       $this->years = Count::getYears($date->years, $endDate->years);
-       $this->months = Count::getMouths($date->months, $endDate->months);
-       $this->days = Count::getDays($date->days, $endDate->days);
-       $this->totalDays = Count::getTotalDifference($date, $endDate);
+        $this->totalDays = Count::getTotalDifference($date, $endDate, $this->invent);
+        $this->years = Count::getYears($date, $endDate, $this->invent);
+        $this->months = Count::getMouths($date, $endDate, $this->invent);
+        $this->days = Count::getDays($date, $endDate, $this->invent);
 
 
     }
