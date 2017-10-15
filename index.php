@@ -21,30 +21,12 @@ use Date\Date;
 
 <?php
 
-//if ( isset($_POST) ) {
-//    $post = $_POST;
-//    if (!empty($post['startDate']) && !empty($post['endDate'])) {
-//        $count = new Date($post['startDate'], $post['endDate']);
-//    } else {
-//        new Error('Both inputs shouldn\'t be empty!', 691);
-//    }
-//}
-
-new Date('2015-12-13', '2015-11-12');
-new Date('2015-11-12', '2015-12-13');
-
-echo '<br>';
-
-new Date('2013-12-13', '2015-11-12');
-new Date('2015-11-12', '2013-12-13');
-
-echo '<br>';
-
-new Date('2013-05-13', '2015-11-12');
-new Date('2015-11-12', '2013-05-13');
-
-echo '<br>';
-
-new Date('2010-05-13', '2015-11-12');
-new Date('2015-11-12', '2010-05-13');
+if ( isset($_POST) ) {
+    $post = $_POST;
+    if (!empty($post['startDate']) && !empty($post['endDate'])) {
+        $count = new Date($post['startDate'], $post['endDate']);
+    } else {
+        new Error('Both inputs shouldn\'t be empty!', 691);
+    }
+}
 ?>
