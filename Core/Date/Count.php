@@ -15,19 +15,16 @@ class Count extends Countable
         $months = Count::getMouths($startDate, $endDate, $invent);
         $days = Count::getDays($startDate, $endDate, $invent);
 
+        $yearsDays = Count::getYearDays($startDate->years, $endDate->years, $invent);
+        $monthsDays = Count::getMonthsDays($startDate, $endDate, $invent);
 
         if ( $years !== 0 && $months !== 0 && $days !== 0 ) {
-            $yearsDays = Count::getYearDays($startDate->years, $endDate->years, $invent);
-            $monthsDays = Count::getMonthsDays($startDate, $endDate, $invent);
             $total = $yearsDays + $monthsDays + $days;
         } elseif ($years === 0 && $months !== 0 && $days !== 0) {
-            echo 'vlae2';
-            $total = $months * $days;
+            $total = $monthsDays + $days;
         } elseif ($years === 0 && $months === 0 && $days !== 0) {
-            echo 'vlae3';
             $total = $days;
         } else {
-            echo 'vlae4';
             $total = 0;
         }
 
@@ -77,13 +74,12 @@ class Count extends Countable
 
             unset($startDays);
         }
-        if ($months !== 0) {
+        if ($months === 0) {
             $days = abs($start->days - $end->days);
         } else {
             $calendar = new Calendar($end->years);
             $days = $calendar->days[$start->months] - $start->days + $end->days;
         }
-
 
         return $days;
     }
@@ -113,43 +109,47 @@ class Count extends Countable
 
     public static function getMonthsDays(Recognizer $start, Recognizer $end, bool $invent) : int {
         $daysTotal = 0;
+        $invent ? $end->years = $start->years : false;
         $calendar = new Calendar($end->years);
 
         if ($invent) {
             $startMonth = $end->months;
             $endMonth = $start->months;
-            $startDays = $start->days;
-            $start->days = $end->days;
-            $end->days = $startDays;
         } else {
             $startMonth = $start->months;
             $endMonth = $end->months;
         }
 
-
         if (abs($startMonth - $endMonth) !== 1) {
+            if ($startMonth > $endMonth) {
+                $var = $startMonth;
+                $startMonth = $endMonth;
+                $endMonth = $var;
+            }
+
             for (; $startMonth < $endMonth; $startMonth++) {
                 if ($startMonth + 1 !== $endMonth) {
                     $daysTotal += $calendar->days[$startMonth];
                 } else {
-                    $daysTotal = $calendar->days[$startMonth] - $start->days + $end->days;
+//                    $daysTotal = $calendar->days[$startMonth] - $start->days + $end->days;
                 }
             }
         } else {
-            $daysTotal = $calendar->days[$startMonth] - $start->days + $end->days;
-            var_dump($calendar->days[$startMonth]);
-            var_dump($start->days);
-            var_dump($end->days);
+            $invent
+                ? $daysTotal = $calendar->days[$startMonth] - $start->days + $end->days
+                : $daysTotal = $calendar->days[$startMonth] - $end->days + $start->days;
+
+            if ($daysTotal > 31) {
+                $daysTotal = 31;
+            }
         }
 
-        if ($daysTotal > 31) {
-            $daysTotal = 31;
-        }
 
-        var_dump($daysTotal);
+
+
+        
         return $daysTotal;
 
     }
-
 
 }

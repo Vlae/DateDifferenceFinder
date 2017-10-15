@@ -38,7 +38,7 @@ class Recognizer {
                 throw new \Error('Incorrect mounts or days inserted', 1);
             }
         } else {
-            throw new \Error($date . ' is incorrect format of date, insert date in «YYYY-MM-DD» format', 2);
+            throw new \Error('"' . $date . '" is incorrect format of date, insert date in «YYYY-MM-DD» format', 2);
         }
     }
 

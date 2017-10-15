@@ -25,12 +25,33 @@ class Date
            $this->invent = Count::setInvent();
        }
 
-        $this->totalDays = Count::getTotalDifference($date, $endDate, $this->invent);
         $this->years = Count::getYears($date, $endDate, $this->invent);
         $this->months = Count::getMouths($date, $endDate, $this->invent);
         $this->days = Count::getDays($date, $endDate, $this->invent);
+        $this->totalDays = Count::getTotalDifference($date, $endDate, $this->invent);
+
+        $this->notificateDifference($sDate, $eDate, $this->years, $this->months, $this->days, $this->totalDays);
+    }
 
 
+    private function notificateDifference(string $firstDate, string $secondDate, int $years, int $months, int $days, int $totalDays) {
+        $text = '<br>Difference between ' . $firstDate . ' and ' . $secondDate . ' :<br>';
+        if ($years) {
+            $text .= $years . ' years ';
+        }
+
+        if ($months) {
+            $text .= $months . ' months ';
+        }
+
+        if ($days) {
+            $text .= $days . ' days ';
+        }
+
+        $text .= '<br>';
+        $text .= 'Total difference in days : '. $totalDays;
+
+        echo $text;
     }
 
 }

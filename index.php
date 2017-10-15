@@ -10,10 +10,41 @@ require_once 'vendor/autoload.php';
 
 use Date\Date;
 
-$count = new Date('2015-03-13', '2017-04-16');
+?>
+
+<form action="index.php" method="post">
+    <input type="text" name="startDate" placeholder="Enter start date">
+    <input type="text" name="endDate" placeholder="Enter end date">
+    <input type="submit" value="submit">
+</form>
+
+
+<?php
+
+//if ( isset($_POST) ) {
+//    $post = $_POST;
+//    if (!empty($post['startDate']) && !empty($post['endDate'])) {
+//        $count = new Date($post['startDate'], $post['endDate']);
+//    } else {
+//        new Error('Both inputs shouldn\'t be empty!', 691);
+//    }
+//}
+
+new Date('2015-12-13', '2015-11-12');
+new Date('2015-11-12', '2015-12-13');
+
 echo '<br>';
-$count1 = new Date('2017-04-16', '2015-03-13');
+
+new Date('2013-12-13', '2015-11-12');
+new Date('2015-11-12', '2013-12-13');
+
 echo '<br>';
-var_dump($count);
+
+new Date('2013-05-13', '2015-11-12');
+new Date('2015-11-12', '2013-05-13');
+
 echo '<br>';
-var_dump($count1);
+
+new Date('2010-05-13', '2015-11-12');
+new Date('2015-11-12', '2010-05-13');
+?>
