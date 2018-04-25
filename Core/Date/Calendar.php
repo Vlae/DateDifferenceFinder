@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * User: Valeriy
- * Date: 14.10.2017
+ * DateOutput: 14.10.2017
  * Time: 10:49
  */
 
@@ -10,9 +10,9 @@ namespace Date;
 
 class Calendar {
 
-    public $yearDays = 364;
+    protected $daysInYear = 364;
     // defines how much days in each month
-    public $days = [
+    protected $days = [
         1 => 31, // Jun
         2 => 28, // Feb
         3 => 31, // Mar
@@ -29,16 +29,30 @@ class Calendar {
 
     /**
      * Calendar constructor. Finds out how much years in February
-     * @param int $years
+     * @param int $year
      *
      */
-    public function __construct(int $years) {
-        if ($years % 4 === 0) {
+    public function __construct(int $year) {
+        if ($this->isYearLeap($year)) {
             $this->days[2] = 29;
+            $this->daysInYear = 365;
+        }
+    }
 
-            $this->yearDays = 365;
+    public function getNumberOfDaysInMonth(int $month) {
+        return $this->days[$month];
+    }
+
+    public function getNumberOfDaysInYear() {
+        return $this->daysInYear;
+    }
+
+    public function isYearLeap(int $year) {
+        if ($year % 4 === 0) {
+            return true;
         }
 
-        return $this->days;
+        return false;
     }
+
 }

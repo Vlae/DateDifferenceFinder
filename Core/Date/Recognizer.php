@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * User: Valeriy
- * Date: 14.10.2017
+ * DateOutput: 14.10.2017
  * Time: 10:51
  */
 
@@ -11,8 +11,8 @@ namespace Date;
 class Recognizer {
     protected $maxMonths = 12;
 
-    public $years;
-    public $months;
+    public $year;
+    public $month;
     public $days;
 
     public function __construct(string $date) {
@@ -30,11 +30,11 @@ class Recognizer {
         $pattern = '/(\d{4})\-(\d{2})\-(\d{2})/';
 
         if (1 === preg_match($pattern, $date, $matches)) {
-            $this->years = (int) $matches[1];
-            $this->months = (int) $matches[2];
+            $this->year = (int) $matches[1];
+            $this->month = (int) $matches[2];
             $this->days = (int) $matches[3];
 
-            if ($this->checkMonths($this->months) && $this->checkDays($this->days, $this->months, $this->days)) {
+            if ($this->checkMonths($this->month) && $this->checkDays($this->days, $this->month, $this->days)) {
                 return true;
             } else {
                 throw new \Error('Incorrect mounts or days inserted', 1);
@@ -67,7 +67,7 @@ class Recognizer {
         $bool = true;
         $calendar = new Calendar($year);
 
-        if ($days > $calendar->days[$month]) {
+        if ($days > $calendar->getNumberOfDaysInMonth($month)) {
             $bool = false;
         }
 
