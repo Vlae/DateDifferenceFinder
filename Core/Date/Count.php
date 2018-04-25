@@ -10,32 +10,29 @@ namespace Date;
 
 class Count extends Countable
 {
-    public static function getTotalDifference(Recognizer $startDate, Recognizer $endDate, bool $invent) : int {
-        $days = Count::getDays($startDate, $endDate, $invent);
-
-        $yearsDays = Count::getYearDays($startDate, $endDate, $invent);
-        $monthsDays = Count::getMonthsDays($startDate, $endDate, $invent);
-
+    public function getTotalDifference(Recognizer $startDate, Recognizer $endDate, bool $invented) : int {
+        $days = $this->getDays($startDate, $endDate, $invented);
+        $yearsDays = $this->getYearDays($startDate, $endDate, $invented);
+        $monthsDays = $this->getMonthsDays($startDate, $endDate, $invented);
 
         return $yearsDays + $monthsDays + $days;
-
     }
 
-    public static function getYears(Recognizer $start, Recognizer $end, bool $invent) : int {
-        $years = abs($start->years - $end->years);
-        $years = Count::removeNotFullYear($start, $end, $invent, $years);
+    public function getYears(Recognizer $startDate, Recognizer $endDate, bool $invented) : int {
+        $years = abs($startDate->years - $endDate->years);
+        $years = $this->removeNotFullYear($startDate, $endDate, $invented, $years);
 
         return $years;
     }
 
 
-    public static function getMouths(Recognizer $start, Recognizer $end, bool $invent) : int {
-        $months = abs($start->months - $end->months);
+    public function getMouths(Recognizer $startDate, Recognizer $endDate, bool $invented) : int {
+        $months = abs($startDate->months - $endDate->months);
 
-        if ($start->years === $end->years) {
-            if (!$invent && $months === 1 && $start->days > $end->days) {
+        if ($startDate->years === $endDate->years) {
+            if (!$invented && $months === 1 && $startDate->days > $endDate->days) {
                 $months--;
-            } elseif ($invent && $months === 1 && $start->days < $end->days) {
+            } elseif ($invented && $months === 1 && $startDate->days < $endDate->days) {
                 $months--;
             }
         }
@@ -43,30 +40,30 @@ class Count extends Countable
         return $months;
     }
 
-    public static function getDays(Recognizer $start, Recognizer $end, bool $invent) : int {
-        $days = abs($start->days - $end->days);
-        $months = Count::getMouths($start, $end, $invent);
-        $calendar = new Calendar($end->years);
+    public function getDays(Recognizer $startDate, Recognizer $endDate, bool $invented) : int {
+        $days = abs($startDate->days - $endDate->days);
+        $months = $this->getMouths($startDate, $endDate, $invented);
+        $calendar = new Calendar($endDate->years);
 
-        $invent ? $startMonths = $end->months : $startMonths = $start->months;
+        $invented ? $startDateMonths = $endDate->months : $startDateMonths = $startDate->months;
 
-        if (!$invent && $months === 0 && $start->days > $end->days) {
-            $days = $calendar->days[$startMonths] - $start->days + $end->days;
-        } elseif($invent && $months === 0 && $end->days > $start->days) {
-            $days = $calendar->days[$startMonths] + $start->days - $end->days;
+        if (!$invented && $months === 0 && $startDate->days > $endDate->days) {
+            $days = $calendar->days[$startDateMonths] - $startDate->days + $endDate->days;
+        } elseif($invented && $months === 0 && $endDate->days > $startDate->days) {
+            $days = $calendar->days[$startDateMonths] + $startDate->days - $endDate->days;
         }
 
         return $days;
     }
 
-    public static function setInvent() : bool {
+    public function setInvent() : bool {
         return true;
     }
 
-    public static function getYearDays(Recognizer $start, Recognizer $end, bool $invent) : int {
+    public function getYearDays(Recognizer $startDate, Recognizer $endDate, bool $invented) : int {
         $daysTotal = 0;
-        $obj = Count::getInventedVariables($start, $end, $invent);
-        $obj->endYear = Count::removeNotFullYear($start, $end, $invent, $obj->endYear);
+        $obj = $this->getInventedVariables($startDate, $endDate, $invented);
+        $obj->endYear = $this->removeNotFullYear($startDate, $endDate, $invented, $obj->endYear);
 
         for (; $obj->startYear < $obj->endYear; $obj->startYear++) {
             $calendar = new Calendar($obj->startYear);
@@ -76,9 +73,9 @@ class Count extends Countable
         return $daysTotal;
     }
 
-    public static function getMonthsDays(Recognizer $start, Recognizer $end, bool $invent) : int {
+    public function getMonthsDays(Recognizer $startDate, Recognizer $endDate, bool $invented) : int {
         $daysTotal = 0;
-        $obj = Count::getInventedVariables($start, $end, $invent);
+        $obj = $this->getInventedVariables($startDate, $endDate, $invented);
 
         $calendar = new Calendar($obj->endYear);
 
@@ -93,17 +90,17 @@ class Count extends Countable
                 if ($obj->startMonth + 1 !== $obj->endMonth) {
                     $daysTotal += $calendar->days[$obj->startMonth];
                 } else {
-                    $invent
-                        ? $daysTotal += $calendar->days[$obj->startMonth] - $start->days + $end->days
-                        : $daysTotal += $calendar->days[$obj->startMonth] - $end->days + $start->days;
+                    $invented
+                        ? $daysTotal += $calendar->days[$obj->startMonth] - $startDate->days + $endDate->days
+                        : $daysTotal += $calendar->days[$obj->startMonth] - $endDate->days + $startDate->days;
                 }
             }
         } else {
             // if month is ended
             if ($obj->startDay < $obj->endDay) {
-                $invent
-                    ? $daysTotal = $calendar->days[$obj->startMonth] - $start->days + $end->days
-                    : $daysTotal = $calendar->days[$obj->startMonth] - $end->days + $start->days;
+                $invented
+                    ? $daysTotal = $calendar->days[$obj->startMonth] - $startDate->days + $endDate->days
+                    : $daysTotal = $calendar->days[$obj->startMonth] - $endDate->days + $startDate->days;
 
                 if ($daysTotal > 31) {
                     $daysTotal = 31;
@@ -115,46 +112,46 @@ class Count extends Countable
 
     }
 
-    private static function getInventedVariables(Recognizer $start, Recognizer $end, bool $invent) : \stdClass {
+    private function getInventedVariables(Recognizer $startDate, Recognizer $endDate, bool $invented) : \stdClass {
         $obj = new \stdClass;
 
-        if ($invent) {
-            $obj->startYear = $end->years;
-            $obj->endYear = $start->years;
-            $obj->startMonth = $end->months;
-            $obj->endMonth = $start->months;
-            $obj->startDay = $end->days;
-            $obj->endDay = $start->days;
+        if ($invented) {
+            $obj->startYear = $endDate->years;
+            $obj->endYear = $startDate->years;
+            $obj->startMonth = $endDate->months;
+            $obj->endMonth = $startDate->months;
+            $obj->startDay = $endDate->days;
+            $obj->endDay = $startDate->days;
         } else {
-            $obj->startMonth = $start->months;
-            $obj->endMonth = $end->months;
-            $obj->startYear = $start->years;
-            $obj->endYear = $end->years;
-            $obj->startDay = $start->days;
-            $obj->endDay = $end->days;
+            $obj->startMonth = $startDate->months;
+            $obj->endMonth = $endDate->months;
+            $obj->startYear = $startDate->years;
+            $obj->endYear = $endDate->years;
+            $obj->startDay = $startDate->days;
+            $obj->endDay = $endDate->days;
         }
 
         return $obj;
     }
 
     /**
-     * Checks is last year ended. If not remove not ended year
+     * Checks is last year ended. If not - remove not ended year
      *
-     * @param Recognizer $start
-     * @param Recognizer $end
-     * @param bool $invent
+     * @param Recognizer $startDate
+     * @param Recognizer $endDate
+     * @param bool $invented
      * @param int $years
      * @return int
      */
-    private static function removeNotFullYear(Recognizer $start, Recognizer $end, bool $invent, int $years) : int {
+    private function removeNotFullYear(Recognizer $startDate, Recognizer $endDate, bool $invented, int $years) : int {
         if (
-            !$invent
-            && ($start->months > $end->months || ($start->months === $end->months && $start->days > $end->days) )
+            !$invented
+            && ($startDate->months > $endDate->months || ($startDate->months === $endDate->months && $startDate->days > $endDate->days) )
         ) {
             $years--;
         } elseif (
-            $invent
-            && ($start->months < $end->months || ($start->months === $end->months && $start->days < $end->days) )
+            $invented
+            && ($startDate->months < $endDate->months || ($startDate->months === $endDate->months && $startDate->days < $endDate->days) )
         ) {
             $years--;
         }

@@ -21,15 +21,15 @@ namespace Date;
 
 abstract class Countable {
 
-    abstract public static function getTotalDifference(Recognizer $startDate, Recognizer $endDate, bool $invent) : int;
+    abstract public function getTotalDifference(Recognizer $startDate, Recognizer $endDate, bool $invented) : int;
 
-    abstract public static function getYears(Recognizer $startDate, Recognizer $endDate, bool $invent) : int;
+    abstract public function getYears(Recognizer $startDate, Recognizer $endDate, bool $invented) : int;
 
-    abstract public static function getMouths(Recognizer $startDate, Recognizer $endDate, bool $invent) : int;
+    abstract public function getMouths(Recognizer $startDate, Recognizer $endDate, bool $invented) : int;
 
-    abstract public static function getDays(Recognizer $start, Recognizer $end, bool $invent) : int;
+    abstract public function getDays(Recognizer $startDate, Recognizer $endDate, bool $invented) : int;
 
-    abstract public static function setInvent() : bool;
+    abstract public function setInvent() : bool;
 
 
 }

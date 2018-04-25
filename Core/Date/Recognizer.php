@@ -22,9 +22,11 @@ class Recognizer {
 
     /**
      * Gets date from string formatted by «YYYY-MM-DD», if string isn't date - pops error
+     * @var $date
+     * @return boolean|\Error
      */
 
-    public function getDateFromString(string $date): string {
+    public function getDateFromString(string $date): bool {
         $pattern = '/(\d{4})\-(\d{2})\-(\d{2})/';
 
         if (1 === preg_match($pattern, $date, $matches)) {

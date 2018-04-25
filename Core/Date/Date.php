@@ -8,6 +8,8 @@
 
 namespace Date;
 
+use Date\Count;
+
 class Date
 {
     protected $years;
@@ -17,20 +19,21 @@ class Date
     protected $invent = false;
 
 
-    public function __construct(string $sDate, string $eDate) {
-        $date = new Recognizer($sDate);
-        $endDate = new Recognizer($eDate);
+    public function __construct(string $rawStartDate, string $rawEndDate) {
+        $startDate = new Recognizer($rawStartDate);
+        $endDate = new Recognizer($rawEndDate);
+        $count = new Count();
 
-       if ($sDate > $eDate) {
-           $this->invent = Count::setInvent();
+       if ($startDate > $endDate) {
+           $this->invent = $count->setInvent();
        }
 
-        $this->years = Count::getYears($date, $endDate, $this->invent);
-        $this->months = Count::getMouths($date, $endDate, $this->invent);
-        $this->days = Count::getDays($date, $endDate, $this->invent);
-        $this->totalDays = Count::getTotalDifference($date, $endDate, $this->invent);
+        $this->years = $count->getYears($startDate, $endDate, $this->invent);
+        $this->months = $count->getMouths($startDate, $endDate, $this->invent);
+        $this->days = $count->getDays($startDate, $endDate, $this->invent);
+        $this->totalDays = $count->getTotalDifference($startDate, $endDate, $this->invent);
 
-        $this->notificateDifference($sDate, $eDate, $this->years, $this->months, $this->days, $this->totalDays);
+        $this->notificateDifference($rawStartDate, $rawEndDate, $this->years, $this->months, $this->days, $this->totalDays);
     }
 
 
